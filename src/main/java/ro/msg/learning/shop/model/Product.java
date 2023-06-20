@@ -2,6 +2,7 @@ package ro.msg.learning.shop.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@SuperBuilder
 public class Product extends EntityWithUUID {
     private String name;
     private String description;
@@ -28,7 +30,7 @@ public class Product extends EntityWithUUID {
     private String imageUrl;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 
     @ToString.Exclude
