@@ -7,7 +7,6 @@ import ro.msg.learning.shop.model.Order;
 import ro.msg.learning.shop.model.OrderDetail;
 import ro.msg.learning.shop.model.Stock;
 import ro.msg.learning.shop.repository.OrderRepository;
-import ro.msg.learning.shop.repository.StockRepository;
 import ro.msg.learning.shop.service.strategy.OrderStrategy;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
-    private StockRepository stockRepository;
+    private StockService stockService;
 
     @Autowired
     private OrderStrategy orderStrategy;
@@ -38,8 +37,7 @@ public class OrderService {
         stocks.forEach(stock ->
                 orderDetails.stream().filter(orderDetail -> stock.getProduct().getId().equals(orderDetail.getProduct().getId())).findFirst()
                         .ifPresent(orderDetail -> {
-                            stock.setQuantity(stock.getQuantity() - orderDetail.getQuantity());
-                            stockRepository.save(stock);
+                            stockService.update(stock, orderDetail.getQuantity());
                             orderDetail.setOrder(order);
                         })
         );
