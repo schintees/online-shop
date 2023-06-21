@@ -3,14 +3,14 @@ package ro.msg.learning.shop.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ro.msg.learning.shop.exception.OutOfStockException;
 import ro.msg.learning.shop.model.Order;
 import ro.msg.learning.shop.model.OrderDetail;
 import ro.msg.learning.shop.model.Stock;
 import ro.msg.learning.shop.repository.OrderRepository;
 import ro.msg.learning.shop.repository.StockRepository;
+import ro.msg.learning.shop.service.strategy.OrderStrategy;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 @Transactional
@@ -22,33 +22,16 @@ public class OrderService {
     @Autowired
     private StockRepository stockRepository;
 
-    public Order create(Order order) {
-        var stocksOptional = findStocks(order);
-        if (stocksOptional.isEmpty()) {
-            throw new OutOfStockException();
-        }
+    @Autowired
+    private OrderStrategy orderStrategy;
 
-        List<Stock> stocks = stocksOptional.get();
+    public Order create(Order order) {
+        List<Stock> stocks = orderStrategy.findStocks(order.getOrderDetails());
+
         updateStocks(stocks, order.getOrderDetails(), order);
         order.setShippedFrom(stocks.get(0).getLocation());
 
         return orderRepository.save(order);
-    }
-
-    private Optional<List<Stock>> findStocks(Order order) {
-        Map<UUID, List<Stock>> stockLocations = new HashMap<>();
-
-        order.getOrderDetails().forEach(orderDetail -> {
-            List<Stock> stocks = stockRepository.findByProductAndQuantityGreaterThanEqual(orderDetail.getProduct(), orderDetail.getQuantity());
-            if (stocks.isEmpty()) {
-                throw new OutOfStockException();
-            }
-            stocks.forEach(stock ->
-                    stockLocations.computeIfAbsent(stock.getLocation().getId(), key -> new ArrayList<>()).add(stock)
-            );
-        });
-
-        return stockLocations.values().stream().filter(stocks -> order.getOrderDetails().size() == stocks.size()).findFirst();
     }
 
     private void updateStocks(List<Stock> stocks, List<OrderDetail> orderDetails, Order order) {

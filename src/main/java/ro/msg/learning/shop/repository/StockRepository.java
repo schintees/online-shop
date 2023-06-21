@@ -11,5 +11,5 @@ import java.util.UUID;
 @Repository
 public interface StockRepository extends JpaRepository<Stock, UUID> {
 
-    List<Stock> findByProductAndQuantityGreaterThanEqual(Product product, Integer quantity);
+    List<Stock> findByProductAndQuantityGreaterThanEqualOrderByQuantityDesc(Product product, Integer quantity);
 }
