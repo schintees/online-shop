@@ -2,6 +2,7 @@ package ro.msg.learning.shop.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "orders")
+@SuperBuilder
 public class Order extends EntityWithUUID {
     @ManyToOne
     @JoinColumn(name = "shipped_from_id")
