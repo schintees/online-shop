@@ -8,10 +8,14 @@ import ro.msg.learning.shop.model.Stock;
 import ro.msg.learning.shop.repository.StockRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
 public class StockService {
+
+    @Autowired
+    private LocationService locationService;
 
     @Autowired
     private StockRepository stockRepository;
@@ -28,4 +32,9 @@ public class StockService {
         stock.setQuantity(stock.getQuantity() - quantityToBeTaken);
         stockRepository.save(stock);
     }
+
+    public List<Stock> getAllByLocation(UUID locationId) {
+        return stockRepository.findByLocation(locationService.get(locationId));
+    }
+
 }
