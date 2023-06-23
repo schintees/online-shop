@@ -20,12 +20,16 @@ public class StockService {
     @Autowired
     private StockRepository stockRepository;
 
-    public void save(Stock stock) {
+    @Autowired
+    private ProductService productService;
+
+    public void create(Stock stock) {
         stockRepository.save(stock);
     }
 
     public List<Stock> getAllByProductAndQuantity(Product product, Integer quantity) {
-        return stockRepository.findByProductAndQuantityGreaterThanEqualOrderByQuantityDesc(product, quantity);
+        return stockRepository.findByProductAndQuantityGreaterThanEqualOrderByQuantityDesc(
+                productService.get(product.getId()), quantity);
     }
 
     public void update(Stock stock, Integer quantityToBeTaken) {
@@ -35,6 +39,10 @@ public class StockService {
 
     public List<Stock> getAllByLocation(UUID locationId) {
         return stockRepository.findByLocation(locationService.get(locationId));
+    }
+
+    public void deleteAll() {
+        stockRepository.deleteAll();
     }
 
 }

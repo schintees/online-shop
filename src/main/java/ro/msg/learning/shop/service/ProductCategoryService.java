@@ -17,4 +17,9 @@ public class ProductCategoryService {
         return productCategoryRepository.findByName(productCategory.getName())
                 .orElseGet(() -> productCategoryRepository.save(productCategory));
     }
+
+    public void deleteAll() {
+        productCategoryRepository.deleteAll();
+    }
+
 }
