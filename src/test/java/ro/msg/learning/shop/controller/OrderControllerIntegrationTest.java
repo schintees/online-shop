@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         classes = ShopApplication.class)
 @AutoConfigureMockMvc
 @TestPropertySource(
-        locations = "classpath:application.properties")
+        locations = "classpath:application-integrationtest.properties")
 @ActiveProfiles("test")
 class OrderControllerIntegrationTest {
 
@@ -80,7 +81,8 @@ class OrderControllerIntegrationTest {
         mvc.perform(post("/orders")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(orderDTO)))
+                        .content(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(orderDTO))
+                        .with(httpBasic("iandoe", "password")))
                 .andExpect(status().isOk()).andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.shippedFrom").exists());
@@ -104,7 +106,8 @@ class OrderControllerIntegrationTest {
         mvc.perform(post("/orders")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(orderDTO)))
+                        .content(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(orderDTO))
+                        .with(httpBasic("iandoe", "password")))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof OutOfStockException));

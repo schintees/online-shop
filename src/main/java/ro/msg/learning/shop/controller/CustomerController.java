@@ -8,23 +8,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ro.msg.learning.shop.dto.OrderDTO;
-import ro.msg.learning.shop.mapper.OrderMapper;
-import ro.msg.learning.shop.model.Order;
-import ro.msg.learning.shop.service.OrderService;
+import ro.msg.learning.shop.dto.CustomerDTO;
+import ro.msg.learning.shop.mapper.CustomerMapper;
+import ro.msg.learning.shop.model.Customer;
+import ro.msg.learning.shop.service.CustomerService;
 
 @RestController
-@RequestMapping(path = "/orders",
+@RequestMapping(path = "/customers",
         produces = MediaType.APPLICATION_JSON_VALUE)
-public class OrderController {
+public class CustomerController {
 
     @Autowired
-    private OrderService orderService;
+    private CustomerService customerService;
 
     @PostMapping
-    public ResponseEntity<OrderDTO> create(@Valid @RequestBody OrderDTO orderDTO) {
-        Order order = orderService.create(OrderMapper.toEntity(orderDTO));
+    public ResponseEntity<CustomerDTO> create(@Valid @RequestBody CustomerDTO customerDTO) {
+        Customer customer = customerService.create(CustomerMapper.toEntity(customerDTO));
 
-        return ResponseEntity.ok(OrderMapper.toDto(order));
+        return ResponseEntity.ok(CustomerMapper.toDto(customer));
     }
 }
