@@ -51,4 +51,8 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
+    public void deleteAll() {
+        productRepository.deleteAll();
+    }
+
 }
