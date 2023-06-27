@@ -3,11 +3,13 @@ package ro.msg.learning.shop.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ro.msg.learning.shop.model.Location;
 import ro.msg.learning.shop.model.Product;
 import ro.msg.learning.shop.model.Stock;
 import ro.msg.learning.shop.repository.StockRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,6 +32,11 @@ public class StockService {
     public List<Stock> getAllByProductAndQuantity(Product product, Integer quantity) {
         return stockRepository.findByProductAndQuantityGreaterThanEqualOrderByQuantityDesc(
                 productService.get(product.getId()), quantity);
+    }
+
+    public Optional<Stock> getByProductAndQuantityAndLocation(Product product, Integer quantity, Location location) {
+        return stockRepository.findByProductAndQuantityGreaterThanEqualAndLocationOrderByQuantityDesc(
+                productService.get(product.getId()), quantity, location);
     }
 
     public void update(Stock stock, Integer quantityToBeTaken) {

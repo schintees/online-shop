@@ -5,10 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import ro.msg.learning.shop.exception.OutOfStockException;
-import ro.msg.learning.shop.model.Location;
-import ro.msg.learning.shop.model.OrderDetail;
-import ro.msg.learning.shop.model.Product;
-import ro.msg.learning.shop.model.Stock;
+import ro.msg.learning.shop.model.*;
 import ro.msg.learning.shop.service.StockService;
 
 import java.util.Arrays;
@@ -49,7 +46,7 @@ class SingleLocationStrategyTest {
         when(stockService.getAllByProductAndQuantity(eq(product2), anyInt())).thenReturn(List.of(stock2, stock3));
 
         // When
-        List<Stock> result = strategy.findStocks(orderDetails);
+        List<Stock> result = strategy.findStocks(Order.builder().orderDetails(orderDetails).build());
 
         // Then
         assertEquals(2, result.size());
@@ -79,7 +76,7 @@ class SingleLocationStrategyTest {
 
         // When
         assertThrows(OutOfStockException.class, () -> {
-            strategy.findStocks(orderDetails);
+            strategy.findStocks(Order.builder().orderDetails(orderDetails).build());
         });
 
         // Then

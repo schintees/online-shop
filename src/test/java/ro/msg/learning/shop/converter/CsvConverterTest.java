@@ -59,7 +59,6 @@ class CsvConverterTest {
 
         // Then
         String csvResult = outputStream.toString();
-        System.out.println(csvResult);
         assertTrue(csvResult.contains("productId,productName,locationId,locationName,quantity"));
         assertTrue(csvResult.contains("\"33dc66a4-d73f-4402-9039-026ad75129c0\",aviator,\"85233c0c-663c-4d03-bab9-1cd5506da089\",Cluj,11\n"));
         assertTrue(csvResult.contains("\"968dc446-e4dc-4aeb-9ec1-08b329e9a758\",browline,\"85233c0c-663c-4d03-bab9-1cd5506da089\",Cluj,3"));
