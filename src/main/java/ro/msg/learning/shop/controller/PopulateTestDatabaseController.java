@@ -12,7 +12,6 @@ import ro.msg.learning.shop.service.PopulateTestDatabaseService;
 
 @Profile("test")
 @RequestMapping(value = "/test-database",
-        consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 public class PopulateTestDatabaseController {
