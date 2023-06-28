@@ -3,6 +3,7 @@ package ro.msg.learning.shop.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ro.msg.learning.shop.exception.ExportEntitiesNotFoundException;
 import ro.msg.learning.shop.model.Location;
 import ro.msg.learning.shop.model.Product;
 import ro.msg.learning.shop.model.Stock;
@@ -45,7 +46,11 @@ public class StockService {
     }
 
     public List<Stock> getAllByLocation(UUID locationId) {
-        return stockRepository.findByLocation(locationService.get(locationId));
+        List<Stock> stocks = stockRepository.findByLocation(locationService.get(locationId));
+        if (stocks.isEmpty()) {
+            throw new ExportEntitiesNotFoundException(Stock.class, locationId.toString());
+        }
+        return stocks;
     }
 
     public void deleteAll() {
