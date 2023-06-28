@@ -25,7 +25,7 @@ public class OrderService {
     private OrderStrategy orderStrategy;
 
     public Order create(Order order) {
-        List<Stock> stocks = orderStrategy.findStocks(order.getOrderDetails());
+        List<Stock> stocks = orderStrategy.findStocks(order);
 
         updateStocks(stocks, order.getOrderDetails(), order);
         order.setShippedFrom(stocks.get(0).getLocation());

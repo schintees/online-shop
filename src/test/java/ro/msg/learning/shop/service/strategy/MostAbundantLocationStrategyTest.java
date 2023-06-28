@@ -5,10 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import ro.msg.learning.shop.exception.OutOfStockException;
-import ro.msg.learning.shop.model.Location;
-import ro.msg.learning.shop.model.OrderDetail;
-import ro.msg.learning.shop.model.Product;
-import ro.msg.learning.shop.model.Stock;
+import ro.msg.learning.shop.model.*;
 import ro.msg.learning.shop.service.StockService;
 
 import java.util.Arrays;
@@ -46,11 +43,11 @@ class MostAbundantLocationStrategyTest {
         Stock stock3 = Stock.builder().product(product2).location(location2).quantity(77).build();
         Stock stock4 = Stock.builder().product(product2).location(location1).quantity(23).build();
 
-        when(stockService.getAllByProductAndQuantity(eq(product1), anyInt())).thenReturn(List.of(stock1,stock2));
+        when(stockService.getAllByProductAndQuantity(eq(product1), anyInt())).thenReturn(List.of(stock1, stock2));
         when(stockService.getAllByProductAndQuantity(eq(product2), anyInt())).thenReturn(List.of(stock3, stock4));
 
         // When
-        List<Stock> result = strategy.findStocks(orderDetails);
+        List<Stock> result = strategy.findStocks(Order.builder().orderDetails(orderDetails).build());
 
         // Then
         assertEquals(2, result.size());
@@ -80,7 +77,7 @@ class MostAbundantLocationStrategyTest {
 
         // When
         assertThrows(OutOfStockException.class, () -> {
-            strategy.findStocks(orderDetails);
+            strategy.findStocks(Order.builder().orderDetails(orderDetails).build());
         });
 
         // Then
