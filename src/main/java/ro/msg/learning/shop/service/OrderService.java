@@ -9,6 +9,7 @@ import ro.msg.learning.shop.model.Stock;
 import ro.msg.learning.shop.repository.OrderRepository;
 import ro.msg.learning.shop.service.strategy.OrderStrategy;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,6 +24,10 @@ public class OrderService {
 
     @Autowired
     private OrderStrategy orderStrategy;
+
+    public List<Order> getAllByCreatedAt(LocalDateTime from, LocalDateTime to) {
+        return orderRepository.findAllByCreatedAtBetween(from, to);
+    }
 
     public Order create(Order order) {
         List<Stock> stocks = orderStrategy.findStocks(order);
